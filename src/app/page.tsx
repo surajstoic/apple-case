@@ -6,16 +6,14 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const REPO_BASE = 'https://github.com/surajstoic/urbainia-case/blob/main';
-
 interface DocRowProps {
   name: string;
-  path: string;
+  docFile: string;   // filename inside /docs/ — empty string means missing
   status: string;
 }
 
-function DocRow({ name, path, status }: DocRowProps) {
-  if (status === 'pending') {
+function DocRow({ name, docFile, status }: DocRowProps) {
+  if (status === 'pending' || !docFile) {
     return (
       <div className="flex items-center gap-3 bg-[#1e1526] border border-rose-500/20 rounded-lg px-4 py-3">
         <span className="shrink-0 text-xs font-black text-rose-500 bg-rose-500/10 border border-rose-500/30 px-2 py-0.5 rounded uppercase tracking-widest">Missing</span>
@@ -25,12 +23,12 @@ function DocRow({ name, path, status }: DocRowProps) {
   }
   return (
     <a
-      href={`${REPO_BASE}/${encodeURIComponent(path)}`}
+      href={`/docs/${docFile}`}
       target="_blank"
       rel="noopener noreferrer"
       className="flex items-center gap-3 bg-[#1a2235] hover:bg-[#1e293b] border border-slate-700/50 hover:border-slate-500 rounded-lg px-4 py-3 transition-colors group"
     >
-      <span className="shrink-0 text-xs font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded uppercase tracking-widest">View</span>
+      <span className="shrink-0 text-xs font-black text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded uppercase tracking-widest">View PDF</span>
       <span className="text-sm text-slate-200 group-hover:text-white font-medium truncate">{name}</span>
     </a>
   );
@@ -286,14 +284,13 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-blue-400 mb-3 flex items-center gap-2"><span>📋</span> Loan Agreements &amp; Sanction Letters</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Agreement — HHLNOD00453843', path: '01_Loan_Agreements_and_Sanctions/HHLNOD00453843_LOAN AGREEMENT_1399261311PDF.PDF', status: 'obtained' },
-                          { name: 'Home Loan Sanction Letter — HHLNOD00453843', path: '01_Loan_Agreements_and_Sanctions/HHLNOD00453843_SANCTION LETTER_1399261311PDF.PDF', status: 'obtained' },
-                          { name: 'Top-up Loan Agreement — HHENOD00454804', path: '01_Loan_Agreements_and_Sanctions/HHENOD00454804_LOAN AGREEMENT_1458511811PDF.PDF', status: 'obtained' },
-                          { name: 'Top-up Loan Sanction Letter — HHENOD00454804', path: '01_Loan_Agreements_and_Sanctions/HHENOD00454804_SANCTION LETTER_1458511811PDF.PDF', status: 'obtained' },
-                          { name: 'Foreclosure Letter', path: '12_Email_Attachments/Indiabulls_Summary_2/ForeClosure Letter IHF-5700647-S1V3M1.pdf', status: 'obtained' },
-                          { name: 'Repayment Schedule — Home Loan', path: '04_Interest_Certificates/Repayment_Schedule_Main_Loan.pdf', status: 'obtained' },
-                          { name: 'Repayment Schedule — Top-up Loan', path: '04_Interest_Certificates/Repayment_Schedule_Emergency_Loan.pdf', status: 'obtained' },
-                          { name: 'Quadripartite Agreement (BBA)', path: '', status: 'pending' },
+                          { name: 'Home Loan Agreement — HHLNOD00453843', docFile: 'HHLNOD_Loan_Agreement.pdf', status: 'obtained' },
+                          { name: 'Home Loan Sanction Letter — HHLNOD00453843', docFile: 'HHLNOD_Sanction_Letter.pdf', status: 'obtained' },
+                          { name: 'Top-up Loan Agreement — HHENOD00454804', docFile: 'HHENOD_Loan_Agreement.pdf', status: 'obtained' },
+                          { name: 'Top-up Loan Sanction Letter — HHENOD00454804', docFile: 'HHENOD_Sanction_Letter.pdf', status: 'obtained' },
+                          { name: 'Foreclosure Letter', docFile: 'Foreclosure_Letter.pdf', status: 'obtained' },
+                          { name: 'PEMI Certificate', docFile: 'PEMI.pdf', status: 'obtained' },
+                          { name: 'Quadripartite Agreement (BBA)', docFile: '', status: 'pending' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
@@ -303,12 +300,12 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-purple-400 mb-3 flex items-center gap-2"><span>📊</span> Account Statements &amp; SOA</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Statement (Feb 2026) — HHLNOD00453843', path: '03_Account_Statements_Latest/Statement_Home_Loan_HHLNOD00453843_Feb2026.pdf', status: 'obtained' },
-                          { name: 'Top-up Loan Statement (Feb 2026) — HHENOD00454804', path: '03_Account_Statements_Latest/Statement_Emergency_Loan_HHENOD00454804_Feb2026.pdf', status: 'obtained' },
-                          { name: 'SOA — HHLNOD00453843', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 - SOA.pdf', status: 'obtained' },
-                          { name: 'SOA — HHENOD00454804', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 - SOA.pdf', status: 'obtained' },
-                          { name: 'RPS — HHLNOD00453843', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 - RPS.pdf', status: 'obtained' },
-                          { name: 'RPS — HHENOD00454804', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 - RPS.pdf', status: 'obtained' },
+                          { name: 'Home Loan Statement Feb 2026 — HHLNOD00453843', docFile: 'Statement_HHLNOD_Feb2026.pdf', status: 'obtained' },
+                          { name: 'Top-up Loan Statement Feb 2026 — HHENOD00454804', docFile: 'Statement_HHENOD_Feb2026.pdf', status: 'obtained' },
+                          { name: 'SOA — HHLNOD00453843', docFile: 'HHLNOD_SOA.pdf', status: 'obtained' },
+                          { name: 'SOA — HHENOD00454804', docFile: 'HHENOD_SOA.pdf', status: 'obtained' },
+                          { name: 'RPS — HHLNOD00453843', docFile: 'HHLNOD_RPS.pdf', status: 'obtained' },
+                          { name: 'RPS — HHENOD00454804', docFile: 'HHENOD_RPS.pdf', status: 'obtained' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
@@ -318,22 +315,22 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-amber-400 mb-3 flex items-center gap-2"><span>🧾</span> Interest &amp; IT Certificates (FY-wise)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Interest Cert FY 2018-19', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (18-19).pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2019-20', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (19-20).pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2020-21', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (20-21).pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2021-22', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (21-22).pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2022-23', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (22-23).pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2023-24', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 (23-24).pdf', status: 'obtained' },
-                          { name: 'Home Loan PC Cert FY 2024-25', path: '12_Email_Attachments/Indiabulls_Summary_2/HHLNOD00453843 PC (24-25).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2018-19', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (18-19).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2019-20', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (19-20).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2020-21', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (20-21).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2021-22', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (21-22).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2022-23', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (22-23).pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2023-24', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 (23-24).pdf', status: 'obtained' },
-                          { name: 'Top-up PC Cert FY 2024-25', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 PC (24-25).pdf', status: 'obtained' },
-                          { name: 'IT Certificate 2020-21 — HHENOD', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 - IT - 2020-21.pdf', status: 'obtained' },
-                          { name: 'IT Certificate 2021-22 — HHENOD', path: '12_Email_Attachments/Indiabulls_Summary_2/HHENOD00454804 - IT - 2021-22.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2018-19', docFile: 'HHLNOD_Interest_FY18_19.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2019-20', docFile: 'HHLNOD_Interest_FY19_20.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2020-21', docFile: 'HHLNOD_Interest_FY20_21.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2021-22', docFile: 'HHLNOD_Interest_FY21_22.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2022-23', docFile: 'HHLNOD_Interest_FY22_23.pdf', status: 'obtained' },
+                          { name: 'Home Loan Interest Cert FY 2023-24', docFile: 'HHLNOD_Interest_FY23_24.pdf', status: 'obtained' },
+                          { name: 'Home Loan PC Cert FY 2024-25', docFile: 'HHLNOD_Interest_FY24_25.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2018-19', docFile: 'HHENOD_Interest_FY18_19.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2019-20', docFile: 'HHENOD_Interest_FY19_20.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2020-21', docFile: 'HHENOD_Interest_FY20_21.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2021-22', docFile: 'HHENOD_Interest_FY21_22.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2022-23', docFile: 'HHENOD_Interest_FY22_23.pdf', status: 'obtained' },
+                          { name: 'Top-up Interest Cert FY 2023-24', docFile: 'HHENOD_Interest_FY23_24.pdf', status: 'obtained' },
+                          { name: 'Top-up PC Cert FY 2024-25', docFile: 'HHENOD_Interest_FY24_25.pdf', status: 'obtained' },
+                          { name: 'IT Certificate 2020-21 — HHENOD', docFile: 'HHENOD_IT_Cert_2020_21.pdf', status: 'obtained' },
+                          { name: 'IT Certificate 2021-22 — HHENOD', docFile: 'HHENOD_IT_Cert_2021_22.pdf', status: 'obtained' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
@@ -343,33 +340,29 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-emerald-400 mb-3 flex items-center gap-2"><span>🏗️</span> Property &amp; Builder Documents</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Builder Ledger Account — D-408', path: '02_Property_Documents/Ledger Account- Suraj Satyarthi D-408.pdf', status: 'obtained' },
-                          { name: 'Permission to Mortgage (PTM)', path: '02_Property_Documents/Urbainia_Feb2026_Docs/PTM- Suraj Satyarthi.pdf', status: 'obtained' },
-                          { name: 'RERA Registration Certificate', path: '02_Property_Documents/UP RERA _ Uttar Pradesh Real Estate Regulatory Authority.pdf', status: 'obtained' },
-                          { name: 'RERA Number Certificate', path: 'RERA number certificate.pdf', status: 'obtained' },
-                          { name: 'Legal Notice — Suraj vs Indiabulls', path: 'LEGAL NOTICE SURAJ INDIABULLS.pdf', status: 'obtained' },
-                          { name: 'IHF Certificate 1', path: 'IHF-7236617-R6N8L7.pdf', status: 'obtained' },
-                          { name: 'IHF Certificate 2', path: 'IHF-7236620-D7D3H2.pdf', status: 'obtained' },
-                          { name: 'Builder Buyer Agreement (BBA) — Soft Copy', path: '', status: 'pending' },
-                          { name: 'Allotment Letter — Soft Copy', path: '', status: 'pending' },
+                          { name: 'Builder Ledger Account — D-408', docFile: 'Builder_Ledger_D408.pdf', status: 'obtained' },
+                          { name: 'Permission to Mortgage (PTM)', docFile: 'Permission_to_Mortgage.pdf', status: 'obtained' },
+                          { name: 'RERA Registration Certificate', docFile: 'RERA_Certificate.pdf', status: 'obtained' },
+                          { name: 'RERA Number Certificate', docFile: 'RERA_Number_Certificate.pdf', status: 'obtained' },
+                          { name: 'Legal Notice — NOC for Release Deed', docFile: 'Legal_Notice_NOC.pdf', status: 'obtained' },
+                          { name: 'IHF Certificate 1', docFile: 'IHF_Certificate_1.pdf', status: 'obtained' },
+                          { name: 'IHF Certificate 2', docFile: 'IHF_Certificate_2.pdf', status: 'obtained' },
+                          { name: 'Builder Buyer Agreement (BBA) — Soft Copy', docFile: '', status: 'pending' },
+                          { name: 'Allotment Letter — Soft Copy', docFile: '', status: 'pending' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
 
                  {/* Legal Correspondence */}
                  <div className="mb-4">
-                    <h3 className="text-xs font-black uppercase tracking-widest text-rose-400 mb-3 flex items-center gap-2"><span>✉️</span> Legal Correspondence</h3>
+                    <h3 className="text-xs font-black uppercase tracking-widest text-rose-400 mb-3 flex items-center gap-2"><span>✉️</span> Legal Correspondence &amp; Drafts</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'NOC Request — Release of Co-Borrower Liability', path: '06_Legal_Correspondence/Latest_NOC_Request_Feb2026.eml', status: 'obtained' },
-                          { name: 'Formal Notice — Unauthorized EMI Increase (HHENOD)', path: '06_Legal_Correspondence/Re_ Formal Notice Seeking Legal Justification for EMI Increase – Loan A_c No. HHENOD00454804 CRM_00000751000004793.eml', status: 'obtained' },
-                          { name: 'Formal Request — Interest Rate Reconsideration', path: '06_Legal_Correspondence/Formal Request to Reconsider Interest Rate Increase on Loan A_c No. HHENOD00454804.eml', status: 'obtained' },
-                          { name: 'Urgent Clarification — Unauthorized Deductions', path: '06_Legal_Correspondence/Urgent Clarification_ Unauthorized Deductions, Penalties & Account Statement.eml', status: 'obtained' },
-                          { name: 'Sammaan Capital — Letter', path: '06_Legal_Correspondence/To Samaan capital.docx', status: 'obtained' },
-                          { name: 'DRAFT — UP RERA Complaint Section 18', path: 'DRAFT_UP_RERA_Complaint.md', status: 'obtained' },
-                          { name: 'DRAFT — Consumer Forum Complaint', path: 'DRAFT_Consumer_Forum_Complaint.md', status: 'obtained' },
-                          { name: 'DRAFT — FIR Complaint', path: 'DRAFT_FIR_Complaint.md', status: 'obtained' },
-                          { name: 'DRAFT — RBI Ombudsman Complaint', path: 'DRAFT_RBI_Ombudsman_Complaint.md', status: 'obtained' },
+                          { name: 'Legal Notice — NOC Non-Issuance (03-Apr-2026)', docFile: 'Legal_Notice_NOC.pdf', status: 'obtained' },
+                          { name: 'DRAFT — UP RERA Section 18 Complaint', docFile: '', status: 'pending' },
+                          { name: 'DRAFT — Consumer Forum Complaint', docFile: '', status: 'pending' },
+                          { name: 'DRAFT — FIR Complaint', docFile: '', status: 'pending' },
+                          { name: 'DRAFT — RBI Ombudsman Complaint', docFile: '', status: 'pending' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
