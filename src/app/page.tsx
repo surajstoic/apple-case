@@ -10,14 +10,20 @@ interface DocRowProps {
   name: string;
   docFile: string;   // filename inside /docs/ — empty string means missing
   status: string;
+  note?: string;     // optional context note shown on pending items
 }
 
-function DocRow({ name, docFile, status }: DocRowProps) {
+function DocRow({ name, docFile, status, note }: DocRowProps) {
   if (status === 'pending' || !docFile) {
     return (
-      <div className="flex items-center gap-3 bg-[#1e1526] border border-rose-500/20 rounded-lg px-4 py-3">
-        <span className="shrink-0 text-xs font-black text-rose-500 bg-rose-500/10 border border-rose-500/30 px-2 py-0.5 rounded uppercase tracking-widest">Missing</span>
-        <span className="text-sm text-rose-300 font-medium">{name}</span>
+      <div className={`flex items-start gap-3 rounded-lg px-4 py-3 border ${note ? 'bg-[#1e0e0e] border-rose-500/50 shadow-[0_0_12px_rgba(239,68,68,0.15)]' : 'bg-[#1e1526] border-rose-500/20'}`}>
+        <span className={`shrink-0 text-xs font-black px-2 py-0.5 rounded uppercase tracking-widest mt-0.5 ${note ? 'text-rose-400 bg-rose-500/20 border border-rose-400/50' : 'text-rose-500 bg-rose-500/10 border border-rose-500/30'}`}>
+          {note ? 'CRITICAL' : 'Missing'}
+        </span>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm text-rose-300 font-medium">{name}</span>
+          {note && <span className="text-xs text-rose-400/80 leading-relaxed">{note}</span>}
+        </div>
       </div>
     );
   }
@@ -119,7 +125,7 @@ export default function CaseBrief() {
 
         {/* TAB NAVIGATION */}
         <div className="flex space-x-1 border-b border-slate-700 mb-8 pb-1 overflow-x-auto">
-          {['DASHBOARD', 'FLOWCHART', 'EVIDENCE', 'TIMELINE', 'DOCUMENTS', 'REVIEWS', 'PRECEDENTS'].map(tab => (
+          {['DASHBOARD', 'FLOWCHART', 'EVIDENCE', 'TIMELINE', 'DOCUMENTS', 'EMAILS', 'CALCULATOR', 'REVIEWS', 'PRECEDENTS'].map(tab => (
              <button 
                key={tab} 
                onClick={() => setActiveTab(tab)}
@@ -284,13 +290,13 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-blue-400 mb-3 flex items-center gap-2"><span>📋</span> Loan Agreements &amp; Sanction Letters</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Agreement — HHLNOD00453843', docFile: 'HHLNOD_Loan_Agreement.pdf', status: 'obtained' },
-                          { name: 'Home Loan Sanction Letter — HHLNOD00453843', docFile: 'HHLNOD_Sanction_Letter.pdf', status: 'obtained' },
-                          { name: 'Top-up Loan Agreement — HHENOD00454804', docFile: 'HHENOD_Loan_Agreement.pdf', status: 'obtained' },
-                          { name: 'Top-up Loan Sanction Letter — HHENOD00454804', docFile: 'HHENOD_Sanction_Letter.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat Purchase) Agreement — HHLNOD00453843', docFile: 'HHLNOD_Loan_Agreement.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat Purchase) Sanction Letter — HHLNOD00453843', docFile: 'HHLNOD_Sanction_Letter.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Agreement — HHENOD00454804', docFile: 'HHENOD_Loan_Agreement.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Sanction Letter — HHENOD00454804', docFile: 'HHENOD_Sanction_Letter.pdf', status: 'obtained' },
                           { name: 'Foreclosure Letter', docFile: 'Foreclosure_Letter.pdf', status: 'obtained' },
                           { name: 'PEMI Certificate', docFile: 'PEMI.pdf', status: 'obtained' },
-                          { name: 'Quadripartite Agreement (BBA)', docFile: '', status: 'pending' },
+                          { name: 'Quadripartite Agreement (BBA)', docFile: '', status: 'pending', note: 'REQUIRED to establish contractual interest rate — determines 9% (RERA) vs 18% (SC precedent) delay compensation' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
@@ -300,12 +306,12 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-purple-400 mb-3 flex items-center gap-2"><span>📊</span> Account Statements &amp; SOA</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Statement Feb 2026 — HHLNOD00453843', docFile: 'Statement_HHLNOD_Feb2026.pdf', status: 'obtained' },
-                          { name: 'Top-up Loan Statement Feb 2026 — HHENOD00454804', docFile: 'Statement_HHENOD_Feb2026.pdf', status: 'obtained' },
-                          { name: 'SOA — HHLNOD00453843', docFile: 'HHLNOD_SOA.pdf', status: 'obtained' },
-                          { name: 'SOA — HHENOD00454804', docFile: 'HHENOD_SOA.pdf', status: 'obtained' },
-                          { name: 'RPS — HHLNOD00453843', docFile: 'HHLNOD_RPS.pdf', status: 'obtained' },
-                          { name: 'RPS — HHENOD00454804', docFile: 'HHENOD_RPS.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat Purchase) Statement Feb 2026 — HHLNOD00453843', docFile: 'Statement_HHLNOD_Feb2026.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Statement Feb 2026 — HHENOD00454804', docFile: 'Statement_HHENOD_Feb2026.pdf', status: 'obtained' },
+                          { name: 'SOA — Home Loan (Flat) HHLNOD00453843', docFile: 'HHLNOD_SOA.pdf', status: 'obtained' },
+                          { name: 'SOA — Life Insurance Loan HHENOD00454804', docFile: 'HHENOD_SOA.pdf', status: 'obtained' },
+                          { name: 'RPS — Home Loan (Flat) HHLNOD00453843', docFile: 'HHLNOD_RPS.pdf', status: 'obtained' },
+                          { name: 'RPS — Life Insurance Loan HHENOD00454804', docFile: 'HHENOD_RPS.pdf', status: 'obtained' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
                  </div>
@@ -315,20 +321,20 @@ export default function CaseBrief() {
                     <h3 className="text-xs font-black uppercase tracking-widest text-amber-400 mb-3 flex items-center gap-2"><span>🧾</span> Interest &amp; IT Certificates (FY-wise)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                        {[
-                          { name: 'Home Loan Interest Cert FY 2018-19', docFile: 'HHLNOD_Interest_FY18_19.pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2019-20', docFile: 'HHLNOD_Interest_FY19_20.pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2020-21', docFile: 'HHLNOD_Interest_FY20_21.pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2021-22', docFile: 'HHLNOD_Interest_FY21_22.pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2022-23', docFile: 'HHLNOD_Interest_FY22_23.pdf', status: 'obtained' },
-                          { name: 'Home Loan Interest Cert FY 2023-24', docFile: 'HHLNOD_Interest_FY23_24.pdf', status: 'obtained' },
-                          { name: 'Home Loan PC Cert FY 2024-25', docFile: 'HHLNOD_Interest_FY24_25.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2018-19', docFile: 'HHENOD_Interest_FY18_19.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2019-20', docFile: 'HHENOD_Interest_FY19_20.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2020-21', docFile: 'HHENOD_Interest_FY20_21.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2021-22', docFile: 'HHENOD_Interest_FY21_22.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2022-23', docFile: 'HHENOD_Interest_FY22_23.pdf', status: 'obtained' },
-                          { name: 'Top-up Interest Cert FY 2023-24', docFile: 'HHENOD_Interest_FY23_24.pdf', status: 'obtained' },
-                          { name: 'Top-up PC Cert FY 2024-25', docFile: 'HHENOD_Interest_FY24_25.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2018-19', docFile: 'HHLNOD_Interest_FY18_19.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2019-20', docFile: 'HHLNOD_Interest_FY19_20.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2020-21', docFile: 'HHLNOD_Interest_FY20_21.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2021-22', docFile: 'HHLNOD_Interest_FY21_22.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2022-23', docFile: 'HHLNOD_Interest_FY22_23.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) Interest Cert FY 2023-24', docFile: 'HHLNOD_Interest_FY23_24.pdf', status: 'obtained' },
+                          { name: 'Home Loan (Flat) PC Cert FY 2024-25', docFile: 'HHLNOD_Interest_FY24_25.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2018-19', docFile: 'HHENOD_Interest_FY18_19.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2019-20', docFile: 'HHENOD_Interest_FY19_20.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2020-21', docFile: 'HHENOD_Interest_FY20_21.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2021-22', docFile: 'HHENOD_Interest_FY21_22.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2022-23', docFile: 'HHENOD_Interest_FY22_23.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan Interest Cert FY 2023-24', docFile: 'HHENOD_Interest_FY23_24.pdf', status: 'obtained' },
+                          { name: 'Life Insurance Loan PC Cert FY 2024-25', docFile: 'HHENOD_Interest_FY24_25.pdf', status: 'obtained' },
                           { name: 'IT Certificate 2020-21 — HHENOD', docFile: 'HHENOD_IT_Cert_2020_21.pdf', status: 'obtained' },
                           { name: 'IT Certificate 2021-22 — HHENOD', docFile: 'HHENOD_IT_Cert_2021_22.pdf', status: 'obtained' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
@@ -347,7 +353,7 @@ export default function CaseBrief() {
                           { name: 'Legal Notice — NOC for Release Deed', docFile: 'Legal_Notice_NOC.pdf', status: 'obtained' },
                           { name: 'IHF Certificate 1', docFile: 'IHF_Certificate_1.pdf', status: 'obtained' },
                           { name: 'IHF Certificate 2', docFile: 'IHF_Certificate_2.pdf', status: 'obtained' },
-                          { name: 'Builder Buyer Agreement (BBA) — Soft Copy', docFile: '', status: 'pending' },
+                          { name: 'Builder Buyer Agreement (BBA) — Soft Copy', docFile: '', status: 'pending', note: 'CRITICAL — interest rate clause in BBA determines recovery amount: 9% RERA S.18 vs 18% per SC precedent (CA 6494/2023, ₹42L→₹92L). Request immediately from crm@urbainia.in' },
                           { name: 'Allotment Letter — Soft Copy', docFile: '', status: 'pending' },
                        ].map((doc, i) => <DocRow key={i} {...doc} />)}
                     </div>
@@ -404,6 +410,207 @@ export default function CaseBrief() {
                  <p className="text-sm text-slate-400 mt-1">Executing RERA Section 18 for full refund vs continuing cause of action limitation.</p>
               </div>
            </div>
+        )}
+
+        {/* TAB CONTENT: EMAILS */}
+        {activeTab === 'EMAILS' && (
+          <div className="space-y-6">
+            <div className="bg-[#111827] border border-slate-700 rounded-2xl p-6">
+              <h2 className="text-xl font-bold mb-1 flex items-center gap-3 text-blue-400">✉️ Key Legal Email Correspondence</h2>
+              <p className="text-sm text-slate-400 mb-6 border-b border-slate-700 pb-4">542 total emails archived. Critical exchanges displayed below. Full archive in case repository.</p>
+
+              <div className="space-y-4">
+                {[
+                  {
+                    date: '13 Feb 2026',
+                    from: 'homeloans@sammaancapital.com',
+                    to: 'surajstoic@gmail.com',
+                    subject: 'RE: NOC for Release Deed — HHLNOD00453843 & HHENOD00454804 (CRM: IHF-7234556-D8K6B0)',
+                    tag: 'SAMMAAN REPLY',
+                    tagColor: 'rose',
+                    body: 'We would like to inform you that as per our system records, Mr. Suraj Satyarthi is the main Applicant towards both the above mentioned loan accounts. As per the confirmation received from our concerned team, we are unable to process your request for NOC to transfer the loan rights to the Co-Applicant (Mr. Satya Narayan Satyarthi). For more clarification, we would request you to kindly visit any nearest Sammaan Capital branch.',
+                    significance: 'This is Sammaan\'s official refusal — their position is that the main applicant cannot be changed without full loan closure. This is legally untenable (para 9 of legal notice) and forms the core of the consumer complaint.'
+                  },
+                  {
+                    date: '05 Feb 2026',
+                    from: 'surajstoic@gmail.com',
+                    to: 'homeloans@sammaancapital.com',
+                    subject: 'Request for NOC for Execution of Release Deed — HHLNOD00453843 & HHENOD00454804',
+                    tag: 'FIRST NOC REQUEST',
+                    tagColor: 'blue',
+                    body: 'I wish to execute a Release Deed transferring my ownership rights in Flat D-408, Urbainia Trinity NX Phase-III to co-applicant Satya Narayan Satyarthi. A No Objection Certificate from Sammaan Capital is required to execute and register the Release Deed. I request you to issue the NOC at the earliest.',
+                    significance: 'First documented NOC request — establishes the start of the refusal timeline. Date: 05-Feb-2026.'
+                  },
+                  {
+                    date: '06 Dec 2025',
+                    from: 'crm@urbainia.in',
+                    to: 'surajstoic@gmail.com',
+                    subject: 'RE: Formal Notice — Project Update Request — D-408 Urbainia Trinity NX',
+                    tag: 'BUILDER ADMISSION',
+                    tagColor: 'amber',
+                    body: 'The agreed total sale consideration was ₹19,50,000 (exclusive of taxes and statutory charges). All subvention interest payments made by Urbainia under the subvention scheme are clearly reflected in the attached Ledger Account Statement. Your copy remains with you. Urbainia has always honored its obligations under the tripartite/loan related arrangements, including subvention payments wherever contractually applicable and due.',
+                    significance: 'CRITICAL: Builder admits total consideration ₹19,50,000 and provides ledger showing subvention payments stopped after Apr 2019 — 6 years before possession. Builder also admits "your copy remains with you" re: BBA but refuses to provide soft copy.'
+                  },
+                  {
+                    date: '10 Aug 2024',
+                    from: 'surajstoic@gmail.com',
+                    to: 'homeloans@sammaancapital.com',
+                    subject: 'URGENT: Pre-EMI Not Converting to Full EMI — HHENOD00454804 — 4 Year Delay — ₹10L Loss',
+                    tag: 'EMI DISPUTE',
+                    tagColor: 'orange',
+                    body: 'Despite repeated requests since 2020, the loan HHENOD00454804 has not been converted from Pre-EMI to full EMI mode. This has resulted in an estimated loss of ₹10,00,000+ over 4 years (2020–2024) as I have been paying Pre-EMI interest on the full outstanding amount rather than reducing principal. The builder stopped subvention payments in April 2019, yet the loan was never restructured.',
+                    significance: 'Documents the 4-year Pre-EMI conversion failure resulting in ₹10L estimated excess interest — a major head of claim in the Consumer Forum complaint.'
+                  },
+                  {
+                    date: 'Sep 2024',
+                    from: 'Recovery Agents (6 named)',
+                    to: 'Suraj Satyarthi',
+                    subject: 'Threats of Rape and Physical Violence — Sammaan Capital Recovery Team',
+                    tag: 'CRIMINAL THREAT',
+                    tagColor: 'red',
+                    body: 'Documented threats including threat of rape and physical beating received from recovery agents of Sammaan Capital. Six agents named with phone numbers. Evidence preserved in /07_Harassment_Evidence/ folder.',
+                    significance: 'CRIMINAL CASE: IPC Sec 75 BNS (rape threat) + 351/115 BNS (criminal intimidation). Six named agents. NOTE: CDR records expire 1 year — audio recordings must be secured immediately as primary substitute evidence.'
+                  },
+                  {
+                    date: '04 Jul 2025',
+                    from: 'homeloans@sammaancapital.com',
+                    to: 'surajstoic@gmail.com',
+                    subject: 'RE: Loan Documents — HHLNOD00453843 & HHENOD00454804',
+                    tag: 'SAMMAAN CONFIRMATION',
+                    tagColor: 'emerald',
+                    body: 'The Loan Agreement date for both accounts HHLNOD00453843 and HHENOD00454804 is 23rd June 2018. The first disbursement on HHENOD00454804 was made on 05-Jul-2018 and on HHLNOD00453843 on 10-Jul-2018.',
+                    significance: 'Confirms exact loan activation dates. Establishes HHENOD (Life Insurance Loan) was activated 5 days before HHLNOD (Home Loan).'
+                  },
+                ].map(({ date, from, to, subject, tag, tagColor, body, significance }, i) => (
+                  <div key={i} className="bg-[#1a2235] border border-slate-700/50 rounded-xl overflow-hidden">
+                    <div className="flex flex-wrap items-center gap-2 px-4 py-3 bg-slate-800/50 border-b border-slate-700/50">
+                      <span className={`text-xs font-black bg-${tagColor}-500/20 text-${tagColor}-400 border border-${tagColor}-500/30 px-2 py-0.5 rounded uppercase tracking-widest shrink-0`}>{tag}</span>
+                      <span className="text-xs text-slate-400 font-mono">{date}</span>
+                      <span className="text-xs text-slate-500">From: {from}</span>
+                    </div>
+                    <div className="px-4 py-3">
+                      <p className="text-sm font-bold text-slate-200 mb-1">{subject}</p>
+                      <p className="text-xs text-slate-400 mb-3 italic leading-relaxed border-l-2 border-slate-600 pl-3">&ldquo;{body}&rdquo;</p>
+                      <p className="text-xs text-amber-300 bg-amber-900/20 border border-amber-500/20 rounded px-3 py-2"><span className="font-bold">Legal Significance: </span>{significance}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-slate-500 text-center pt-4">Full email archive: 08_Kriger_Emails (196 emails) + 09_Surajstoic_Emails (251 emails) + 10_Builder_Urbainia_Emails + 06_Legal_Correspondence</p>
+            </div>
+          </div>
+        )}
+
+        {/* TAB CONTENT: CALCULATOR */}
+        {activeTab === 'CALCULATOR' && (
+          <div className="space-y-6">
+            {/* Precedent Banner */}
+            <div className="bg-emerald-900/30 border border-emerald-500/40 rounded-xl p-4">
+              <p className="text-sm text-emerald-200"><span className="font-black text-emerald-400">SC Precedent: </span>Supreme Court has ordered 18% p.a. interest on full refund amount. MahaRERA has ordered ₹42L → ₹92L (18% × 7 years). RERA Section 18 guarantees minimum 9%. Both routes computed below.</p>
+            </div>
+
+            {/* What Was Paid */}
+            <div className="bg-[#111827] border border-slate-700 rounded-2xl p-6">
+              <h3 className="text-blue-400 font-bold text-sm tracking-widest uppercase mb-4">Amount Paid by Complainant (Confirmed from Documents)</h3>
+              <div className="space-y-2 mb-4">
+                {[
+                  { label: 'Direct payments to builder (Feb–Apr 2016, pre-loan)', amount: 430000, source: 'Urbainia Ledger Dec 2025' },
+                  { label: 'Pre-EMI on Life Insurance Loan (HHENOD) out of pocket', amount: 688866, source: 'Bank stmt ₹9,51,610 minus ₹2,62,744 subvention' },
+                  { label: 'Principal repaid — Life Insurance Loan HHENOD00454804', amount: 277239, source: 'Bank account statement' },
+                  { label: 'Pre-EMI/Interest paid — Home Loan HHLNOD00453843', amount: 49939, source: 'Bank account statement' },
+                ].map(({ label, amount, source }, i) => (
+                  <div key={i} className="flex items-center justify-between gap-4 bg-[#1a2235] rounded-lg px-4 py-3 border border-slate-700/50">
+                    <div>
+                      <p className="text-sm text-slate-200">{label}</p>
+                      <p className="text-xs text-slate-500">{source}</p>
+                    </div>
+                    <span className="font-mono font-bold text-slate-100 shrink-0">₹{amount.toLocaleString('en-IN')}</span>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between gap-4 bg-blue-900/30 rounded-lg px-4 py-3 border border-blue-500/40 mt-2">
+                  <span className="font-bold text-blue-300">TOTAL CONFIRMED PAID (out of pocket)</span>
+                  <span className="font-mono font-black text-blue-300 text-xl">₹14,46,044</span>
+                </div>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50 mt-3">
+                <p className="text-xs text-slate-400"><span className="text-amber-400 font-bold">Outstanding loans (bank owes clearance): </span>HHLNOD ₹15,59,681 + HHENOD ₹54,938 = <span className="text-amber-400 font-bold">₹16,14,619</span> — builder must clear this as part of refund under RERA Sec 18.</p>
+              </div>
+            </div>
+
+            {/* Two Scenarios */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* RERA 9% */}
+              <div className="bg-[#111827] border border-blue-500/40 rounded-2xl p-6">
+                <div className="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Route A — UP RERA Section 18</div>
+                <div className="text-lg font-bold text-slate-100 mb-4">9% p.a. Interest</div>
+                <div className="space-y-2 text-sm mb-4">
+                  <div className="flex justify-between text-slate-300"><span>Amount paid (confirmed)</span><span className="font-mono">₹14,46,044</span></div>
+                  <div className="flex justify-between text-slate-300"><span>Interest @ 9% × 3 years</span><span className="font-mono text-blue-300">+ ₹3,90,432</span></div>
+                  <div className="flex justify-between text-slate-300"><span>(from RERA deadline Apr 8, 2023)</span><span className="font-mono text-xs text-slate-500">= 36 months</span></div>
+                  <div className="border-t border-slate-700 pt-2 flex justify-between font-bold text-blue-300"><span>RERA Refund Total</span><span className="font-mono text-xl">₹18,36,476</span></div>
+                  <div className="flex justify-between text-amber-300 text-xs mt-1"><span>+ Builder clears outstanding loans</span><span className="font-mono">₹16,14,619</span></div>
+                  <div className="flex justify-between text-emerald-400 font-bold"><span>Combined financial relief</span><span className="font-mono">₹34,51,095</span></div>
+                </div>
+                <p className="text-xs text-slate-500">Filed at: up-rera.nic.in | Timeline: 6–12 months</p>
+              </div>
+
+              {/* Consumer Court 18% */}
+              <div className="bg-[#111827] border border-emerald-500/40 rounded-2xl p-6">
+                <div className="text-xs font-black text-emerald-400 uppercase tracking-widest mb-1">Route B — Consumer Court (SC Precedent)</div>
+                <div className="text-lg font-bold text-slate-100 mb-4">18% p.a. Interest</div>
+                <div className="space-y-2 text-sm mb-4">
+                  <div className="flex justify-between text-slate-300"><span>Amount paid (confirmed)</span><span className="font-mono">₹14,46,044</span></div>
+                  <div className="flex justify-between text-slate-300"><span>Interest @ 18% × 3 years</span><span className="font-mono text-emerald-300">+ ₹7,80,864</span></div>
+                  <div className="flex justify-between text-slate-300"><span>(from RERA deadline Apr 8, 2023)</span><span className="font-mono text-xs text-slate-500">= 36 months</span></div>
+                  <div className="border-t border-slate-700 pt-2 flex justify-between font-bold text-emerald-300"><span>Consumer Court Total</span><span className="font-mono text-xl">₹22,26,908</span></div>
+                  <div className="flex justify-between text-slate-300 text-xs mt-1"><span>+ Mental agony & harassment</span><span className="font-mono">₹5,00,000</span></div>
+                  <div className="flex justify-between text-slate-300 text-xs"><span>+ Litigation costs</span><span className="font-mono">₹1,00,000</span></div>
+                  <div className="flex justify-between text-amber-300 text-xs"><span>+ Builder clears outstanding loans</span><span className="font-mono">₹16,14,619</span></div>
+                  <div className="flex justify-between text-emerald-400 font-bold"><span>Combined financial relief</span><span className="font-mono">₹44,41,527</span></div>
+                </div>
+                <p className="text-xs text-slate-500">SC precedent confirmed. Timeline: 12–24 months</p>
+              </div>
+            </div>
+
+            {/* Additional Claims */}
+            <div className="bg-[#111827] border border-amber-500/30 rounded-2xl p-6">
+              <h3 className="text-amber-400 font-bold text-sm tracking-widest uppercase mb-4">Additional Heads of Claim (Consumer Forum)</h3>
+              <div className="space-y-2">
+                {[
+                  { label: 'Pre-EMI wasted (HHENOD) — total paid, not just out-of-pocket', amount: '₹9,51,610', note: 'Bank stmt confirmed' },
+                  { label: '4-year Pre-EMI → Full EMI conversion failure (2020–2024)', amount: '₹10,00,000', note: 'Suraj\'s own Aug 2024 complaint' },
+                  { label: 'Moratorium wrongful denial (6 months EMI, COVID)', amount: '₹72,708', note: 'RBI circular 2019-20/186' },
+                  { label: 'Excess overdue/bounce charges (identified from audit)', amount: '₹51,660+', note: 'Loan audit table' },
+                  { label: 'Interest rate hike (8.55% → 13.85%, 8 hikes in 2022)', amount: '~₹3,50,000', note: 'Rate hike email chain' },
+                  { label: 'Harassment via recovery agents (FIR grounds)', amount: '₹5,00,000', note: 'Sep 2024 threat evidence' },
+                  { label: 'NOC non-issuance consequential loss', amount: '₹1,00,000', note: 'Legal notice Ref SS/HC/M/24' },
+                ].map(({ label, amount, note }, i) => (
+                  <div key={i} className="flex items-center justify-between gap-4 bg-[#1a2235] rounded-lg px-4 py-2.5 border border-slate-700/50">
+                    <div>
+                      <p className="text-sm text-slate-200">{label}</p>
+                      <p className="text-xs text-slate-500">{note}</p>
+                    </div>
+                    <span className="font-mono font-bold text-amber-300 shrink-0">{amount}</span>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between gap-4 bg-amber-900/30 rounded-lg px-4 py-3 border border-amber-500/40 mt-2">
+                  <span className="font-bold text-amber-300">GRAND TOTAL ESTIMATED CLAIM (all routes combined)</span>
+                  <span className="font-mono font-black text-amber-300 text-xl">₹30–44L</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Basis */}
+            <div className="bg-[#111827] border border-slate-700 rounded-2xl p-5">
+              <h3 className="text-slate-400 font-bold text-xs tracking-widest uppercase mb-3">Legal Basis for Interest Rate</h3>
+              <div className="space-y-2 text-xs text-slate-400">
+                <p><span className="text-blue-400 font-bold">RERA Sec 18:</span> SBI MCLR + 2% ≈ 9% p.a. on all amounts paid, from agreed possession date till actual refund.</p>
+                <p><span className="text-emerald-400 font-bold">SC Precedent:</span> Supreme Court upheld 18% p.a. in multiple homebuyer cases. MahaRERA case: ₹42L → ₹92L. Cite: Wg. Cdr. Arifur Rahman Khan vs DLF Southern Homes (SC 2020).</p>
+                <p><span className="text-amber-400 font-bold">Consumer Protection Act 2019:</span> Deficiency in service + unfair trade practice. Compensation for mental agony, harassment, and financial loss beyond the refund principal.</p>
+                <p><span className="text-rose-400 font-bold">Outstanding loans:</span> Builder must clear the outstanding loan with Sammaan Capital — confirmed in Ravi Prakash Srivastava vs Indiabulls HFL (Delhi SCDRC 2023).</p>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* TAB CONTENT: REVIEWS */}
