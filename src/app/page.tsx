@@ -27,10 +27,12 @@ function DocRow({ name, docFile, status, note }: DocRowProps) {
       </div>
     );
   }
+  const isImage = /\.(png|jpe?g|gif|webp)$/i.test(docFile);
+  const label = isImage ? 'View Image' : 'View PDF';
   return (
     <a href={`/docs/${docFile}`} target="_blank" rel="noopener noreferrer"
       className="flex items-center gap-3 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-lg px-4 py-3 transition-colors group">
-      <span className="shrink-0 text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded uppercase tracking-widest">View PDF</span>
+      <span className="shrink-0 text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded uppercase tracking-widest">{label}</span>
       <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium truncate">{name}</span>
     </a>
   );
@@ -327,9 +329,12 @@ export default function Page() {
                 category: 'Purchase Documents',
                 color: 'blue',
                 items: [
-                  { name: 'Amazon Invoice DED4-3977711', status: 'obtained', file: 'Amazon_Invoice_DED4-3977711.pdf' },
-                  { name: 'Amazon Order Confirmation', status: 'obtained', file: 'Amazon_Order_Confirmation.pdf' },
-                  { name: 'EMI Schedule / Payment Proof', status: 'pending', file: '', note: 'Bank EMI deduction statements — needed for financial quantum' },
+                  { name: 'Amazon Invoice DED4-3977711', status: 'obtained', file: 'Amazon_Invoice.pdf' },
+                  { name: 'Amazon Order Confirmation', status: 'obtained', file: 'Amazon_Order_Document.pdf' },
+                  { name: 'Apple Limited Warranty Screenshot (24 Feb — active, expires 7 Feb 2027)', status: 'obtained', file: 'Apple_Warranty_Active.png' },
+                  { name: 'Amazon Return Window Closed Screenshot (24 Feb 2026)', status: 'obtained', file: 'Amazon_Return_Window_Closed.png' },
+                  { name: 'EMI Receipt / MacBook Purchase Proof', status: 'obtained', file: 'EMI_Receipt.jpeg' },
+                  { name: 'Bank EMI Deduction Statements (×6 instalments)', status: 'pending', file: '', note: 'Bank statements showing all 6 EMI deductions of Rs.14,165' },
                 ],
               },
               {
@@ -339,11 +344,16 @@ export default function Page() {
                   { name: 'Apple Appointment Email — 19 Feb (Carry-in 1)', status: 'obtained', file: '' },
                   { name: 'Apple Appointment Email — 21/23 Feb (Carry-in 2)', status: 'obtained', file: '' },
                   { name: 'Apple Appointment Email — 25 Feb (Carry-in 3)', status: 'obtained', file: '' },
-                  { name: 'F1 Info Job Sheet / Service Report', status: 'pending', file: '', note: 'CRITICAL — physical repair receipt from F1 Info Solutions' },
-                  { name: 'Apple Case Email — Case 102824929878', status: 'obtained', file: '' },
-                  { name: 'Apple Case Email — Case 102826682299', status: 'obtained', file: '' },
-                  { name: 'Apple Case Email — Case 102828630926', status: 'obtained', file: '' },
-                  { name: 'Apple Case Email — Case 102829545441', status: 'obtained', file: '' },
+                  { name: 'F1 Info Job Sheet 1 — "No Issue Found" (20 Feb)', status: 'obtained', file: 'JobSheet_1.jpeg' },
+                  { name: 'F1 Info Job Sheet 2 — "Running Properly" (26 Feb, after Crash 5)', status: 'obtained', file: 'JobSheet_2.jpeg' },
+                  { name: 'Service Centre Visit Photo 1', status: 'obtained', file: 'Visit_Photo_1.jpg' },
+                  { name: 'Service Centre Visit Photo 2', status: 'obtained', file: 'Visit_Photo_2.jpeg' },
+                  { name: 'Service Centre Visit Photo 3', status: 'obtained', file: 'Visit_Photo_3.jpeg' },
+                  { name: 'Apple Case Email — Case 102824929878', status: 'obtained', file: 'Case_102824929878.pdf' },
+                  { name: 'Apple Case Email — Case 102824938226', status: 'obtained', file: 'Case_102824938226.pdf' },
+                  { name: 'Apple Case Email — Case 102825096686', status: 'obtained', file: 'Case_102825096686.pdf' },
+                  { name: 'Apple Case Email — Case 102828630926', status: 'obtained', file: 'Case_102828630926.pdf' },
+                  { name: 'Apple Case Email — Case 102829546899', status: 'obtained', file: 'Case_102829546899.pdf' },
                   { name: 'Apple Case Email — Case 102829546899', status: 'obtained', file: '' },
                   { name: 'Satisfaction Survey Email (20 Feb — while defect active)', status: 'obtained', file: '' },
                   { name: 'Satisfaction Survey Email (23 Feb — while defect active)', status: 'obtained', file: '' },
@@ -356,8 +366,11 @@ export default function Page() {
                   { name: 'Emails to tcook@apple.com (4 emails, 26 Feb – 3 Mar)', status: 'obtained', file: '' },
                   { name: 'India_Support Auto-Deflection Responses (×4)', status: 'obtained', file: '' },
                   { name: 'Replacement Demand Email (26 Feb)', status: 'obtained', file: '' },
-                  { name: 'Legal Notice — 03-Apr-2026 (Adv. Sudhanshu Kr. Singh)', status: 'obtained', file: '' },
-                  { name: 'Amazon Twitter / X DM Thread (08 Apr 2026)', status: 'obtained', file: '' },
+                  { name: 'Legal Notice — DRAFT ONLY, not yet served (Adv. Sudhanshu Kr. Singh)', status: 'obtained', file: '' },
+                  { name: 'Amazon Help — Public Tweet Reply (03 Apr 2026, by Shareef)', status: 'obtained', file: 'Amazon_Twitter_Reply.png' },
+                  { name: 'Amazon Help — DM Sent with Legal Questions (08 Apr 2026)', status: 'obtained', file: 'Amazon_DM_Sent.png' },
+                  { name: 'Amazon Chat — Issue Reported (19 Feb 2026)', status: 'obtained', file: 'Amazon_Chat_1.png' },
+                  { name: 'Amazon Chat — CRITICAL: Refused Replacement in Writing (19 Feb 2026)', status: 'obtained', file: 'Amazon_Chat_4_Critical.png' },
                 ],
               },
             ].map(section => (
@@ -428,41 +441,41 @@ export default function Page() {
               {
                 category: 'Purchase & Financial Documents',
                 docs: [
-                  { name: 'Amazon Invoice DED4-3977711', file: 'Amazon_Invoice_DED4-3977711.pdf', status: 'obtained' },
-                  { name: 'Amazon Order Confirmation', file: 'Amazon_Order_Confirmation.pdf', status: 'obtained' },
+                  { name: 'Amazon Invoice DED4-3977711', file: 'Amazon_Invoice.pdf', status: 'obtained' },
+                  { name: 'Amazon Order Confirmation', file: 'Amazon_Order_Document.pdf', status: 'obtained' },
                   { name: 'EMI Schedule / Bank Payment Statements', file: '', status: 'pending', note: 'CRITICAL — proves ongoing financial loss from defective device' },
                 ],
               },
               {
                 category: 'Apple Service Records',
                 docs: [
-                  { name: 'F1 Info Job Sheet / Repair Receipt (19 Feb)', file: '', status: 'pending', note: 'CRITICAL — primary service record from authorised centre' },
-                  { name: 'F1 Info Job Sheet / Repair Receipt (21 Feb)', file: '', status: 'pending', note: 'CRITICAL — documents first OS reinstall' },
-                  { name: 'F1 Info Job Sheet / Repair Receipt (25 Feb)', file: '', status: 'pending', note: 'CRITICAL — documents second OS reinstall before final crash' },
+                  { name: 'F1 Info Job Sheet 1 — "No Issue Found" (20 Feb 2026)', file: 'JobSheet_1.jpeg', status: 'obtained' },
+                  { name: 'F1 Info Job Sheet 2 — "Running Properly" (26 Feb, after Crash 5)', file: 'JobSheet_2.jpeg', status: 'obtained' },
+                  { name: 'Apple Service Center Summary', file: 'Service_Center_Summary.pdf', status: 'obtained' },
                 ],
               },
               {
                 category: 'Crash Logs (IPS Diagnostic Files)',
                 docs: [
-                  { name: 'Crash Log 1 — 19 Feb 2026', file: 'Crash_Log_1_19Feb2026.pdf', status: 'obtained' },
-                  { name: 'Crash Log 2 — 21 Feb 2026 (after OS reinstall)', file: 'Crash_Log_2_21Feb2026.pdf', status: 'obtained' },
-                  { name: 'Crash Log 3 — 23 Feb 2026', file: 'Crash_Log_3_23Feb2026.pdf', status: 'obtained' },
-                  { name: 'Crash Log 4 — 24 Feb 2026', file: 'Crash_Log_4_24Feb2026.pdf', status: 'obtained' },
-                  { name: 'Crash Log 5 — 25 Feb 2026 (within 11 hrs of 2nd reinstall)', file: 'Crash_Log_5_25Feb2026.pdf', status: 'obtained' },
+                  { name: 'Crash Log — Case 102824938226 (CRASH_LOG_EVIDENCE)', file: 'Crash_Log_Evidence.pdf', status: 'obtained' },
+                  { name: 'Crash Log 3 — Diagnostic Evidence (3rd_Crash)', file: 'Crash_3_Evidence.pdf', status: 'obtained' },
+                  { name: 'Crash Logs 1, 2, 4, 5 — IPS diagnostic files (raw)', file: '', status: 'pending', note: 'Export individual IPS files from ~/Library/Logs/DiagnosticReports as PDFs' },
                 ],
               },
               {
                 category: 'Legal Documents',
                 docs: [
-                  { name: 'Legal Notice — 03 Apr 2026 (Adv. Sudhanshu Kr. Singh)', file: 'Legal_Notice_03Apr2026.pdf', status: 'obtained' },
-                  { name: 'Legal Notice Review Points', file: 'Legal_Notice_Review_Points.pdf', status: 'obtained' },
+                  { name: 'Legal Notice Draft — Adv. Sudhanshu Kr. Singh (NOT YET SERVED)', file: 'Legal_Notice_Apple.pdf', status: 'obtained' },
+                  { name: 'Legal Notice Review Points (4 issues — discuss before serving)', file: '', status: 'pending', note: 'Discuss with Sudhanshu before serving the notice' },
                 ],
               },
               {
                 category: 'Email & Communication Records',
                 docs: [
                   { name: 'Full Gmail Email Analysis (60+ emails, 19 Feb – 2 Mar)', file: '', status: 'obtained' },
-                  { name: 'Amazon Twitter DM Screenshots (08 Apr 2026)', file: '', status: 'obtained' },
+                  { name: 'Amazon Help Public Tweet Reply (03 Apr 2026)', file: 'Amazon_Twitter_Reply.png', status: 'obtained' },
+                  { name: 'Amazon Help DM Sent — 3 Legal Questions (08 Apr 2026)', file: 'Amazon_DM_Sent.png', status: 'obtained' },
+                  { name: 'Amazon India Email — Aania Social Media Team (10 Apr 2026)', file: '', status: 'pending', note: 'PENDING REPLY — Aania asks for order ID, service denial letter, invoice, IMEI' },
                 ],
               },
             ].map(section => (

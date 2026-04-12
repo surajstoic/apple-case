@@ -32,11 +32,11 @@ async function run() {
       ('a6', 'Suraj', 'Collect EMI bank statements showing 6 deductions', 'Bank account statements showing EMI deductions of Rs.14,165 each — proves ongoing financial loss from defective device', '1600', false),
       ('a7', 'Suraj', 'Upload Evidence_Package to Google Drive', 'rclone installed, gdrive remote configured. Complete OAuth token and run: rclone copy Evidence_Package gdrive:Apple_Case/', '900', false),
       ('a8', 'Suraj', 'File consumer complaint at District Forum, Patna', 'After lawyer finalises the complaint draft — file at District Consumer Disputes Redressal Commission, Patna', '2000', false),
-      ('l1', 'Lawyer', 'Finalize and send legal notice to Apple India + F1 Info', 'Review 4 identified issues, make corrections, send via courier with tracking. 15-day response window starts from delivery.', '3600', false),
-      ('l2', 'Lawyer', 'Draft consumer complaint under CPA 2019', 'Forum: District Consumer Commission, Patna. Relief: Replacement OR refund Rs.81,160 + 18% interest + Rs.25,000 mental agony + costs', '2800', false),
-      ('l3', 'Lawyer', 'Consider adding Amazon/Clicktech Retail as 3rd Respondent', 'Clicktech Retail Pvt. Ltd. (Amazon seller) is jointly liable as seller. Add if Amazon deflects on their DM response.', '1400', false),
-      ('l4', 'Lawyer', 'Prepare technical summary of crash logs for forum', 'Translate IPS crash log technical terms (TH_UNINT, GPU/MMU/TLB faults, watchdog) into plain language for the forum judge', '2000', false),
-      ('l5', 'Lawyer', 'Source Apple India precedents from NCDRC/District Forums', 'Search for past consumer forum orders against Apple India involving MacBook defects, replacement refused, premature case closure', '1200', false);
+      ('l1', 'Sudhanshu', 'Finalize and send legal notice to Apple India + F1 Info', 'Review 4 identified issues, make corrections, send via courier with tracking. 15-day response window starts from delivery.', '3600', false),
+      ('l2', 'Sudhanshu', 'Draft consumer complaint under CPA 2019', 'Forum: District Consumer Commission, Patna. Relief: Replacement OR refund Rs.81,160 + 18% interest + Rs.25,000 mental agony + costs', '2800', false),
+      ('l3', 'Sudhanshu', 'Consider adding Amazon/Clicktech Retail as 3rd Respondent', 'Clicktech Retail Pvt. Ltd. (Amazon seller) is jointly liable as seller. Add if Amazon deflects on their DM response.', '1400', false),
+      ('l4', 'Sudhanshu', 'Prepare technical summary of crash logs for forum', 'Translate IPS crash log technical terms (TH_UNINT, GPU/MMU/TLB faults, watchdog) into plain language for the forum judge', '2000', false),
+      ('l5', 'Sudhanshu', 'Source Apple India precedents from NCDRC/District Forums', 'Search for past consumer forum orders against Apple India involving MacBook defects, replacement refused, premature case closure', '1200', false);
     `);
 
     console.log('Successfully seeded 13 Apple case tasks.');
