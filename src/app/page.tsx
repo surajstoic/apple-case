@@ -98,11 +98,11 @@ export default function Page() {
             placeholder="Enter passcode"
             value={pass}
             onChange={e => setPass(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && pass === 'Apple2026') setAuth(true); }}
+            onKeyDown={e => { if (e.key === 'Enter' && pass === 'sudhanshu1234') setAuth(true); }}
             className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
-            onClick={() => { if (pass === 'Apple2026') setAuth(true); }}
+            onClick={() => { if (pass === 'sudhanshu1234') setAuth(true); }}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
           >
             Access Dashboard
