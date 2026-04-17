@@ -52,7 +52,47 @@ function tagClass(color: string) {
   return m[color] ?? 'bg-gray-100 text-gray-700 border-gray-200';
 }
 
-const TABS = ['SUMMARY','TASK LIST','FLOWCHART','EVIDENCE','TIMELINE','DOCUMENTS','EMAILS','CALCULATOR','REVIEWS','PRECEDENTS'];
+const TABS = ['SUMMARY','TASK LIST','FLOWCHART','EVIDENCE','TIMELINE','DOCUMENTS','EMAILS','CALCULATOR','REVIEWS','PRECEDENTS','COMPLAINTS','APPLE EMAILS'] as const;
+type Tab = typeof TABS[number];
+
+interface NavItem { tab: Tab; label: string; highlight?: boolean }
+interface NavGroup { label: string; items: NavItem[] }
+
+const NAV_GROUPS: NavGroup[] = [
+  { label: 'Overview', items: [
+    { tab: 'SUMMARY',    label: 'Summary' },
+    { tab: 'TIMELINE',   label: 'Timeline' },
+    { tab: 'FLOWCHART',  label: 'Strategy' },
+  ]},
+  { label: 'Evidence', items: [
+    { tab: 'EVIDENCE',     label: 'Evidence' },
+    { tab: 'REVIEWS',      label: 'Reviews' },
+    { tab: 'EMAILS',       label: 'All Emails' },
+    { tab: 'APPLE EMAILS', label: 'Apple Emails' },
+  ]},
+  { label: 'Legal', items: [
+    { tab: 'COMPLAINTS',  label: 'Complaints', highlight: true },
+    { tab: 'PRECEDENTS',  label: 'Precedents' },
+  ]},
+];
+
+const NAV_DIRECT: NavItem[] = [
+  { tab: 'DOCUMENTS',  label: 'Documents' },
+  { tab: 'CALCULATOR', label: 'Calculator' },
+  { tab: 'TASK LIST',  label: 'Tasks' },
+];
+
+interface EmailRecord {
+  id: number;
+  subject: string;
+  from: string;
+  to: string;
+  date: string;
+  raw_date: string;
+  Ref_IDs: string[];
+  categories: string[];
+  snippet: string;
+}
 
 interface Task {
   id: string;
@@ -64,13 +104,14 @@ interface Task {
 }
 
 export default function Page() {
-  const [auth, setAuth] = useState(false);
-  const [pass, setPass] = useState('');
-  const [tab, setTab] = useState('SUMMARY');
+  const [activeTab, setActiveTab] = useState<Tab>('SUMMARY');
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [allEmails, setAllEmails] = useState<EmailRecord[]>([]);
+  const [emailQuery, setEmailQuery] = useState('');
+  const [emailsLoaded, setEmailsLoaded] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!auth) return;
     supabase.from('apple_tasks').select('*').order('id').then(({ data }) => {
       if (data) setTasks(data as Task[]);
     });
@@ -82,54 +123,99 @@ export default function Page() {
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [auth]);
+  }, []);
+
+  useEffect(() => {
+    if (['EMAILS', 'APPLE EMAILS'].includes(activeTab) && !emailsLoaded) {
+      fetch('/emails.json').then(r => r.json()).then((data: EmailRecord[]) => {
+        setAllEmails(data);
+        setEmailsLoaded(true);
+      }).catch(() => setEmailsLoaded(true));
+    }
+  }, [activeTab, emailsLoaded]);
+
+  const filteredEmails = emailQuery.trim().length < 2 ? allEmails : allEmails.filter(e => {
+    const q = emailQuery.toLowerCase();
+    return e.subject?.toLowerCase().includes(q) ||
+      e.from?.toLowerCase().includes(q) ||
+      e.snippet?.toLowerCase().includes(q) ||
+      e.categories?.some(c => c.toLowerCase().includes(q));
+  });
 
   async function toggleTask(t: Task) {
     await supabase.from('apple_tasks').update({ done: !t.done }).eq('id', t.id);
-  }
-
-  if (!auth) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-sm text-center">
-          <div className="text-4xl mb-4">⚖️</div>
-          <h1 className="text-xl font-bold text-gray-900 mb-1">Legal Case Dashboard</h1>
-          <p className="text-sm text-gray-500 mb-6">Suraj Satyarthi v. Apple India</p>
-          <input
-            type="password"
-            placeholder="Enter passcode"
-            value={pass}
-            onChange={e => setPass(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && pass === 'sudhanshu1234') setAuth(true); }}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={() => { if (pass === 'sudhanshu1234') setAuth(true); }}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
-          >
-            Access Dashboard
-          </button>
-          {pass && pass !== 'Apple2026' && (
-            <p className="text-xs text-red-500 mt-2">Incorrect passcode</p>
-          )}
-        </div>
-      </div>
-    );
   }
 
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Sticky header */}
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4 py-2 flex items-center gap-2 flex-wrap">
-          <span className="text-lg font-black text-blue-700 mr-2">⚖️ Apple Case</span>
-          {TABS.map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors ${tab === t ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
-              {t}
-            </button>
-          ))}
-          <span className="ml-auto text-xs font-black text-red-600 bg-red-50 border border-red-200 px-2 py-1 rounded uppercase tracking-widest">CONFIDENTIAL</span>
+        <div className="max-w-[1400px] mx-auto px-6 flex items-center gap-4 h-14">
+          <div className="font-bold text-blue-700 text-sm tracking-wide shrink-0 mr-2">⚖️ Apple Case</div>
+
+          {/* Desktop dropdown nav */}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1">
+            {NAV_GROUPS.map(group => (
+              <div key={group.label} className="relative"
+                onMouseLeave={() => setOpenMenu(null)}>
+                <button
+                  onMouseEnter={() => setOpenMenu(group.label)}
+                  onClick={() => setOpenMenu(openMenu === group.label ? null : group.label)}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    group.items.some(i => i.tab === activeTab)
+                      ? 'text-blue-700 bg-blue-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}>
+                  {group.label}
+                  <svg className="w-3 h-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {openMenu === group.label && (
+                  <div className="absolute left-0 top-full mt-0.5 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-[190px] z-50">
+                    {group.items.map(item => (
+                      <button key={item.tab}
+                        onClick={() => { setActiveTab(item.tab); setOpenMenu(null); }}
+                        className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
+                          activeTab === item.tab
+                            ? 'bg-blue-50 text-blue-700'
+                            : item.highlight
+                            ? 'text-rose-600 hover:bg-rose-50'
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                        }`}>
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div className="w-px h-4 bg-gray-200 mx-1" />
+            {NAV_DIRECT.map(item => (
+              <button key={item.tab} onClick={() => setActiveTab(item.tab)}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === item.tab
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}>
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Mobile tab scroll */}
+          <nav className="md:hidden flex items-center gap-0.5 overflow-x-auto flex-1">
+            {TABS.map(t => (
+              <button key={t} onClick={() => setActiveTab(t)}
+                className={`shrink-0 px-3 py-1.5 rounded-md text-xs font-bold tracking-wide transition-colors whitespace-nowrap ${
+                  activeTab === t ? 'bg-blue-600 text-white' : 'text-gray-500 hover:bg-gray-100'
+                }`}>
+                {t}
+              </button>
+            ))}
+          </nav>
+
+          <span className="shrink-0 bg-red-50 text-red-600 text-xs font-bold px-3 py-1 rounded-full border border-red-200 ml-auto">CONFIDENTIAL</span>
         </div>
       </header>
 
@@ -159,7 +245,7 @@ export default function Page() {
       <main className="max-w-[1400px] mx-auto px-4 py-6">
 
         {/* ─── SUMMARY ─── */}
-        {tab === 'SUMMARY' && (
+        {activeTab === 'SUMMARY' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -247,7 +333,7 @@ export default function Page() {
         )}
 
         {/* ─── TASK LIST ─── */}
-        {tab === 'TASK LIST' && (
+        {activeTab === 'TASK LIST' && (
           <div className="bg-white rounded-xl border border-gray-200">
             <div className="px-5 py-4 border-b border-gray-100">
               <h2 className="font-black text-gray-900">Task Board</h2>
@@ -278,7 +364,7 @@ export default function Page() {
         )}
 
         {/* ─── FLOWCHART ─── */}
-        {tab === 'FLOWCHART' && (
+        {activeTab === 'FLOWCHART' && (
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="font-black text-gray-900 mb-6 uppercase text-xs tracking-widest text-blue-700">Retrograde Analysis — Path to Victory</h2>
             <div className="flex flex-col items-center gap-0">
@@ -310,7 +396,7 @@ export default function Page() {
         )}
 
         {/* ─── EVIDENCE ─── */}
-        {tab === 'EVIDENCE' && (
+        {activeTab === 'EVIDENCE' && (
           <div className="space-y-6">
             {[
               {
@@ -398,7 +484,7 @@ export default function Page() {
         )}
 
         {/* ─── TIMELINE ─── */}
-        {tab === 'TIMELINE' && (
+        {activeTab === 'TIMELINE' && (
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <h2 className="font-black text-gray-900 mb-5 uppercase text-xs tracking-widest text-blue-700">Chronological Timeline</h2>
             <div className="relative">
@@ -435,7 +521,7 @@ export default function Page() {
         )}
 
         {/* ─── DOCUMENTS ─── */}
-        {tab === 'DOCUMENTS' && (
+        {activeTab === 'DOCUMENTS' && (
           <div className="space-y-5">
             {[
               {
@@ -494,7 +580,7 @@ export default function Page() {
         )}
 
         {/* ─── EMAILS ─── */}
-        {tab === 'EMAILS' && (
+        {activeTab === 'EMAILS' && (
           <div className="space-y-4">
             <p className="text-sm text-gray-500">8 most legally significant emails from 60+ extracted from kriger.5490@gmail.com</p>
             {[
@@ -599,7 +685,7 @@ export default function Page() {
         )}
 
         {/* ─── CALCULATOR ─── */}
-        {tab === 'CALCULATOR' && (
+        {activeTab === 'CALCULATOR' && (
           <div className="space-y-5">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <h2 className="font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-blue-700">Financial Summary</h2>
@@ -686,7 +772,7 @@ export default function Page() {
         )}
 
         {/* ─── REVIEWS ─── */}
-        {tab === 'REVIEWS' && (
+        {activeTab === 'REVIEWS' && (
           <div className="space-y-5">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <h2 className="font-black text-gray-900 mb-4 uppercase text-xs tracking-widest text-blue-700">F1 Info Solutions — Service Failure Pattern</h2>
@@ -725,7 +811,7 @@ export default function Page() {
         )}
 
         {/* ─── PRECEDENTS ─── */}
-        {tab === 'PRECEDENTS' && (
+        {activeTab === 'PRECEDENTS' && (
           <div className="space-y-4">
             {[
               {
@@ -799,6 +885,102 @@ full refund with 18% interest, plus compensation and costs.`}</pre>
             </div>
           </div>
         )}
+
+        {/* ─── COMPLAINTS ─── */}
+        {activeTab === 'COMPLAINTS' && (
+          <div className="space-y-4">
+            <div className="bg-white rounded-xl border border-gray-200">
+              <div className="px-5 py-4 border-b border-gray-100">
+                <h2 className="font-black text-gray-900">Complaints & Formal Actions</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Formal complaints filed or to be filed against respondents.</p>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {[
+                  { ref: 'CPA-001', target: 'Apple India Pvt. Ltd.', purpose: 'Manufacturing defect — 5 crashes in 17 days, s.2(10) CPA 2019', status: 'DRAFT', color: 'amber' },
+                  { ref: 'CPA-002', target: 'Amazon India / Clicktech Retail Pvt. Ltd.', purpose: 'Sale of defective product — refused replacement in writing', status: 'DRAFT', color: 'amber' },
+                  { ref: 'CPA-003', target: 'F1 Info Solutions & Services Pvt. Ltd.', purpose: 'Deficiency in service — 3 visits, no root cause, no diagnostic report', status: 'DRAFT', color: 'amber' },
+                  { ref: 'CASES-001', target: 'Apple Support', purpose: 'Case 102824929878 — Crash 1 (19 Feb 2026)', status: 'FILED', color: 'blue' },
+                  { ref: 'CASES-002', target: 'Apple Support', purpose: 'Case 102824938226 — Escalation (21 Feb 2026)', status: 'FILED', color: 'blue' },
+                  { ref: 'CASES-003', target: 'Apple Support', purpose: 'Case 102825096686 — Crash 2 follow-up', status: 'FILED', color: 'blue' },
+                  { ref: 'CASES-004', target: 'Apple Support', purpose: 'Case 102828630926 — Danish / Customer Relations (24 Feb 2026)', status: 'FILED', color: 'blue' },
+                  { ref: 'CASES-005', target: 'Apple Support', purpose: 'Case 102829546899 — Final escalation (24–25 Feb 2026)', status: 'FILED', color: 'blue' },
+                  { ref: 'NCH-001', target: 'National Consumer Helpline (1915)', purpose: 'Pre-filing complaint — Ingram NCH form in Evidence_Package', status: 'PENDING', color: 'orange' },
+                ].map(c => (
+                  <div key={c.ref} className="flex items-start gap-4 px-5 py-4">
+                    <span className={`shrink-0 text-xs font-black px-2 py-0.5 rounded border ${tagClass(c.color)}`}>{c.status}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs text-gray-400">{c.ref}</span>
+                        <span className="font-semibold text-sm text-gray-900">{c.target}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">{c.purpose}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── APPLE EMAILS ─── */}
+        {activeTab === 'APPLE EMAILS' && (() => {
+          const appleEmails = allEmails.filter(e =>
+            ['apple', 'applecare', 'support.apple.com', 'india_support'].some(k =>
+              (e.from + ' ' + e.to).toLowerCase().includes(k)
+            )
+          );
+          return (
+            <div className="space-y-4">
+              <div className="bg-white rounded-xl border border-gray-200">
+                <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-3 flex-wrap">
+                  <div>
+                    <h2 className="font-black text-gray-900">Apple Email Correspondence</h2>
+                    <p className="text-xs text-gray-500 mt-0.5">{emailsLoaded ? `${appleEmails.length} Apple emails from extracted corpus` : 'Loading emails…'}</p>
+                  </div>
+                  {emailsLoaded && (
+                    <input value={emailQuery} onChange={e => setEmailQuery(e.target.value)}
+                      placeholder="Search Apple emails…"
+                      className="ml-auto border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64" />
+                  )}
+                </div>
+                {!emailsLoaded ? (
+                  <div className="px-5 py-8 text-center text-sm text-gray-400">Loading emails — run Step 4 (extract_apple_emails.py) first if empty.</div>
+                ) : appleEmails.length === 0 ? (
+                  <div className="px-5 py-8 text-center text-sm text-gray-400">No Apple emails found. Run <code className="bg-gray-100 px-1 rounded">extract_apple_emails.py</code> to populate /public/emails.json.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-gray-100 text-xs text-gray-500 font-bold uppercase tracking-wide">
+                          <th className="text-left px-5 py-3">Date</th>
+                          <th className="text-left px-5 py-3">From</th>
+                          <th className="text-left px-5 py-3">Subject</th>
+                          <th className="text-left px-5 py-3">Category</th>
+                          <th className="text-left px-5 py-3">Snippet</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {(emailQuery.trim().length >= 2 ? filteredEmails.filter(e => ['apple','applecare','support.apple.com','india_support'].some(k => (e.from+' '+e.to).toLowerCase().includes(k))) : appleEmails).map(e => (
+                          <tr key={e.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="px-5 py-3 whitespace-nowrap text-gray-500 text-xs">{e.date}</td>
+                            <td className="px-5 py-3 text-xs text-gray-700 max-w-[160px] truncate">{e.from}</td>
+                            <td className="px-5 py-3 font-medium text-gray-900 max-w-[220px] truncate">{e.subject}</td>
+                            <td className="px-5 py-3">
+                              {e.categories?.map(c => (
+                                <span key={c} className="inline-block text-xs font-bold px-1.5 py-0.5 rounded border bg-blue-50 text-blue-700 border-blue-200 mr-1">{c}</span>
+                              ))}
+                            </td>
+                            <td className="px-5 py-3 text-xs text-gray-500 max-w-[300px] truncate">{e.snippet}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
       </main>
     </div>
