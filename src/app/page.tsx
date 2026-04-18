@@ -275,11 +275,12 @@ export default function Page() {
                   ['Model', 'MacBook Air M4 (2025)'],
                   ['Config', '16GB RAM / 256GB SSD / Midnight'],
                   ['Serial', 'DJ31J7MLJ4'],
-                  ['Purchase Date', '8 February 2026'],
-                  ['Purchase Price', '₹81,160.70'],
+                  ['Order Date', '1 February 2026 (Delivered 8 Feb)'],
+                  ['MRP / Invoice Value', '₹94,990'],
+                  ['Amount Paid', '₹81,160.70 (after ₹10,000 bank discount)'],
                   ['Payment', 'No-Cost EMI ₹14,165 × 6 months'],
                   ['Seller', 'Clicktech Retail Pvt. Ltd. (Amazon)'],
-                  ['Invoice', 'DED4-3977711'],
+                  ['Invoice', 'DED4-3977711 (dated 4 Feb 2026)'],
                 ].map(([k, v]) => (
                   <div key={k} className="bg-gray-50 rounded-lg p-3">
                     <div className="text-xs text-gray-500 uppercase font-bold">{k}</div>
