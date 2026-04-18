@@ -376,7 +376,7 @@ export default function Page() {
             <h2 className="font-black text-gray-900 mb-6 uppercase text-xs tracking-widest text-blue-700">Retrograde Analysis — Path to Victory</h2>
             <div className="flex flex-col items-center gap-0">
               {[
-                { step: '5', label: 'ULTIMATE OBJECTIVE', desc: 'Replacement of MacBook Air M4 with new device OR full refund ₹81,160.70 + 18% interest + compensation', color: 'emerald' },
+                { step: '5', label: 'ULTIMATE OBJECTIVE', desc: 'Replacement of MacBook Air M4 with new device OR full refund ₹94,990 + 18% p.a. interest from 1 Feb 2026 + compensation for mental agony + cost of litigation', color: 'emerald' },
                 { step: '4', label: 'FORUM DECISION', desc: 'District Consumer Disputes Redressal Commission, Patna — order within 3–5 months under CPA 2019 fast track', color: 'blue' },
                 { step: '3', label: 'COMPLAINT FILED', desc: 'Consumer complaint with all evidence: crash logs, purchase docs, Apple emails, service records, legal notice', color: 'blue' },
                 { step: '2', label: 'LEGAL NOTICE SERVED', desc: 'Notice via Adv. Sudhanshu Kr. Singh (Jharkhand HC) — 15 days for Apple India + F1 Info to respond', color: 'amber' },
@@ -498,7 +498,8 @@ export default function Page() {
               <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
               <div className="space-y-4 pl-10">
                 {[
-                  { date: '8 Feb 2026', tag: 'PURCHASE', color: 'blue', event: 'MacBook Air M4 purchased on Amazon', detail: 'Invoice DED4-3977711. ₹81,160.70 via no-cost EMI (₹14,165 × 6). Seller: Clicktech Retail Pvt. Ltd. Serial: DJ31J7MLJ4.' },
+                  { date: '1 Feb 2026', tag: 'PURCHASE', color: 'blue', event: 'MacBook Air M4 ordered on Amazon', detail: 'MRP ₹94,990. Paid ₹81,160.70 after ₹10,000 bank discount. No-cost EMI ₹14,165 × 6. Invoice DED4-3977711 (Clicktech Retail Pvt. Ltd.). Serial: DJ31J7MLJ4. Delivered 8 Feb 2026.' },
+                  { date: '9 Feb 2026', tag: 'CRASH 1', color: 'red', event: 'First crash — Day 1 of use', detail: 'Reboot at 1:43 PM with no preceding shutdown = forced hardware crash. Device owned 1 day (delivered 8 Feb, first boot 10:36 AM).' },
                   { date: '19 Feb 2026', tag: 'CRASH 1', color: 'red', event: 'First crash — 11 days after purchase', detail: 'First visit to F1 Info Solutions. Apple opened Case 102824929878. IPS log shows TH_UNINT hardware wait states.' },
                   { date: '20 Feb 2026', tag: 'APPLE CONTACT', color: 'amber', event: 'Apple agent Mohammed (phone support)', detail: 'Apple sent satisfaction survey same day (20 Feb) even though hardware defect was not resolved. Documents premature case closure pattern.' },
                   { date: '21 Feb 2026', tag: 'CRASH 2', color: 'red', event: 'OS reinstall by F1 Info — crash recurs same day', detail: 'Second carry-in. F1 Info performs OS reinstall. Crash 2 occurs same day — Apple appointment email confirms reinstall; IPS log confirms crash. Hardware conclusively implicated.' },
