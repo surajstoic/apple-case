@@ -913,7 +913,7 @@ full refund with 18% interest, plus compensation and costs.`}</pre>
                   { ref: 'CASES-003', target: 'Apple Support', purpose: 'Case 102825096686 — Crash 2 follow-up', status: 'FILED', color: 'blue' },
                   { ref: 'CASES-004', target: 'Apple Support', purpose: 'Case 102828630926 — Danish / Customer Relations (24 Feb 2026)', status: 'FILED', color: 'blue' },
                   { ref: 'CASES-005', target: 'Apple Support', purpose: 'Case 102829546899 — Final escalation (24–25 Feb 2026)', status: 'FILED', color: 'blue' },
-                  { ref: 'NCH-001', target: 'National Consumer Helpline (1915)', purpose: 'Pre-filing complaint — Ingram NCH form in Evidence_Package', status: 'PENDING', color: 'orange' },
+                  { ref: 'NCH-001', target: 'National Consumer Helpline — INGRAM', purpose: 'Grievance No. 9132133 — Filed 18 Apr 2026 08:31. Status: IN PROCESS. Amount: ₹94,990. All 5 Apple case nos. submitted. 3 documents uploaded.', status: 'FILED', color: 'emerald' },
                 ].map(c => (
                   <div key={c.ref} className="flex items-start gap-4 px-5 py-4">
                     <span className={`shrink-0 text-xs font-black px-2 py-0.5 rounded border ${tagClass(c.color)}`}>{c.status}</span>
