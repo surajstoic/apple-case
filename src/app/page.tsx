@@ -228,7 +228,7 @@ export default function Page() {
             {[
               { label: 'Documented Crashes', value: '5', sub: 'Feb 19–25, 2026' },
               { label: 'Service Centre Visits', value: '3', sub: 'Apple-confirmed appointments' },
-              { label: 'Device Age at 1st Crash', value: '11 days', sub: 'Purchased 8 Feb 2026' },
+              { label: 'Device Age at 1st Crash', value: '11 days', sub: 'Delivered 8 Feb, crash 19 Feb' },
               { label: 'Total Claim', value: '₹1,55,768+', sub: 'Replacement + compensation' },
             ].map(s => (
               <div key={s.label} className="bg-white/10 rounded-xl px-4 py-3">
@@ -264,7 +264,7 @@ export default function Page() {
                 <h2 className="font-black text-gray-800 mb-3 uppercase text-xs tracking-widest text-red-600">Respondent 2</h2>
                 <p className="font-bold text-gray-900">F1 Info Solutions & Services</p>
                 <p className="text-sm text-gray-600 mt-1">Authorised Apple Service Centre, Patna</p>
-                <p className="text-sm text-gray-600">2× OS reinstalls; no root cause repair</p>
+                <p className="text-sm text-gray-600">2× OS reinstalls; no root cause repair; device withheld since 25 Feb — never returned</p>
               </div>
             </div>
 
