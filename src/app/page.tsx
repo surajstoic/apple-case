@@ -447,7 +447,6 @@ export default function Page() {
                   { name: 'Apple Case Email — Case 102825096686', status: 'obtained', file: 'Case_102825096686.pdf' },
                   { name: 'Apple Case Email — Case 102828630926', status: 'obtained', file: 'Case_102828630926.pdf' },
                   { name: 'Apple Case Email — Case 102829546899', status: 'obtained', file: 'Case_102829546899.pdf' },
-                  { name: 'Apple Case Email — Case 102829546899', status: 'obtained', file: '' },
                   { name: 'Satisfaction Survey Email (20 Feb — while defect active)', status: 'obtained', file: '' },
                   { name: 'Satisfaction Survey Email (23 Feb — while defect active)', status: 'obtained', file: '' },
                 ],
