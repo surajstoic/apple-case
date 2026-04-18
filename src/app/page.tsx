@@ -294,16 +294,20 @@ export default function Page() {
               <h2 className="font-black text-gray-800 mb-4 uppercase text-xs tracking-widest text-blue-700">Brief Facts Timeline</h2>
               <ol className="space-y-2">
                 {[
-                  ['8 Feb 2026', 'MacBook Air M4 purchased on Amazon for ₹81,160.70 on no-cost EMI'],
-                  ['19 Feb 2026', 'Crash 1 — 11 days after purchase. First visit to F1 Info Solutions. Apple Case 102824929878 opened.'],
-                  ['20 Feb 2026', 'Apple agent Mohammed (phone). Satisfaction survey sent same day — case still unresolved.'],
-                  ['21 Feb 2026', '2nd visit to F1 Info. OS reinstalled. Crash 2 occurs on same day — proves hardware defect.'],
-                  ['23 Feb 2026', '3rd visit. Apple agent Kritika. Case 102826682299 opened.'],
-                  ['24 Feb 2026', 'Apple Customer Relations (Danish) involved. Cases 102828630926 and 102829545441 opened.'],
-                  ['25 Feb 2026', '2nd OS reinstall by F1 Info. Crash 5 occurs within 11 hours — devastating evidence of logic board defect.'],
-                  ['26 Feb 2026', 'Suraj emails Apple India demanding replacement. Apple goes completely silent thereafter.'],
-                  ['26 Feb – 3 Mar', 'Suraj emails tcook@apple.com 4 times — receives only India_Support auto-deflections.'],
-                  ['3 Apr 2026', 'Legal notice dated 03-04-2026 prepared by Adv. Sudhanshu Kr. Singh (Jharkhand HC)'],
+                  ['1 Feb 2026', 'MacBook Air M4 ordered on Amazon. MRP ₹94,990, paid ₹81,160.70 after ₹10,000 bank discount. Invoice DED4-3977711.'],
+                  ['8 Feb 2026', 'Device delivered. First boot 10:36 AM.'],
+                  ['9 Feb 2026', 'CRASH 1 — Day 1 of use. Reboot with no preceding shutdown (forced hardware crash).'],
+                  ['19 Feb 2026', 'Crash — 11 days after delivery. First visit to F1 Info Solutions. Apple Cases 102824929878 + 102824938226 opened. Senior Advisor confirmed hardware defect on call.'],
+                  ['20 Feb 2026', 'Apple agent Mohammed (phone). Job Sheet PAT2602207009402. Apple sent satisfaction survey same day — case still unresolved. Premature closure documented.'],
+                  ['21 Feb 2026', '2nd visit to F1 Info. OS reinstalled. Crash recurs same day — proves hardware defect.'],
+                  ['23 Feb 2026', '3rd visit. Apple agent Kritika. Second satisfaction survey sent — defect still unresolved.'],
+                  ['24 Feb 2026', 'Apple Customer Relations (Danish) involved. Cases 102828630926 + 102829545441 opened.'],
+                  ['25 Feb 2026', '2nd OS reinstall. Crash 5 within 11 hours. F1 Info Job Sheet PAT2602257014860 states verbatim: "Earlier, Mac OS was re installed in device but the user is facing the same issue again." — written admission of hardware defect.'],
+                  ['25 Feb onwards', 'MacBook NOT returned. F1 Info has never called to collect. Device worth ₹94,990 withheld without resolution. Apple closes all 5 support tickets without fixing defect or returning device.'],
+                  ['26 Feb 2026', 'Suraj emails Apple India demanding replacement — last substantive Apple contact.'],
+                  ['26 Feb – 3 Mar', '4 emails to tcook@apple.com — only India_Support auto-deflections received.'],
+                  ['3 Apr 2026', 'Legal notice prepared by Adv. Sudhanshu Kr. Singh (Jharkhand HC) against Apple India + F1 Info.'],
+                  ['8 Apr 2026', 'Amazon Help DM sent on X/Twitter with 3 formal legal questions. Screenshots saved.'],
                 ].map(([date, event], i) => (
                   <li key={i} className="flex gap-3 text-sm">
                     <span className="shrink-0 font-bold text-blue-700 w-28">{date}</span>
