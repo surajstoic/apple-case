@@ -459,6 +459,7 @@ export default function Page() {
                   { name: 'India_Support Auto-Deflection Responses (×4)', status: 'obtained', file: '' },
                   { name: 'Replacement Demand Email (26 Feb)', status: 'obtained', file: '' },
                   { name: 'Legal Notice — DRAFT ONLY, not yet served (Adv. Sudhanshu Kr. Singh)', status: 'obtained', file: '' },
+                  { name: 'NCH INGRAM Grievance No. 9132133 — Filed 18 Apr 2026 (Status: In Process)', status: 'obtained', file: 'NCH_Grievance_9132133_Filed_18Apr2026.pdf' },
                   { name: 'Amazon Help — Public Tweet Reply (03 Apr 2026, by Shareef)', status: 'obtained', file: 'Amazon_Twitter_Reply.png' },
                   { name: 'Amazon Help — DM Sent with Legal Questions (08 Apr 2026)', status: 'obtained', file: 'Amazon_DM_Sent.png' },
                   { name: 'Amazon Chat — Issue Reported (19 Feb 2026)', status: 'obtained', file: 'Amazon_Chat_1.png' },
@@ -511,6 +512,7 @@ export default function Page() {
                   { date: '26 Feb – 3 Mar', tag: 'SILENCE', color: 'slate', event: 'Apple goes completely silent + closes tickets', detail: '4 emails sent to tcook@apple.com. All received only India_Support auto-deflection. Apple closes all support cases without resolving the defect and without ensuring the device is returned to the consumer.' },
                   { date: '3 Apr 2026', tag: 'LEGAL NOTICE', color: 'amber', event: 'Legal notice prepared', detail: 'Notice drafted by Adv. Sudhanshu Kr. Singh, Jharkhand High Court. Filed against Apple India Pvt. Ltd. and F1 Info Solutions & Services Pvt. Ltd.' },
                   { date: '8 Apr 2026', tag: 'AMAZON DM', color: 'blue', event: 'Amazon Help (X/Twitter) DM — formal legal questions sent', detail: 'Amazon Help (@AmazonHelp) replied publicly on X. Suraj sent formal DM with 3 legal questions. Screenshots saved. Clicktech Retail can be added as 3rd respondent if they deflect.' },
+                  { date: '18 Apr 2026', tag: 'NCH FILED', color: 'emerald', event: 'INGRAM National Consumer Helpline complaint filed', detail: 'Grievance No. 9132133 filed at consumerhelpline.gov.in. Status: In Process. Expectation: Refund ₹94,990. All 5 Apple support cases submitted. Company: Apple India Private Limited. 3 documents uploaded.' },
                 ].map((e, i) => (
                   <div key={i} className="relative">
                     <div className="absolute -left-10 mt-1 w-4 h-4 rounded-full border-2 border-white bg-gray-300" style={{ backgroundColor: e.color === 'red' ? '#ef4444' : e.color === 'blue' ? '#3b82f6' : e.color === 'amber' ? '#f59e0b' : e.color === 'orange' ? '#f97316' : e.color === 'purple' ? '#a855f7' : '#9ca3af' }} />
