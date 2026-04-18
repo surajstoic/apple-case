@@ -223,7 +223,7 @@ export default function Page() {
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white">
         <div className="max-w-[1400px] mx-auto px-4 py-6">
           <h1 className="text-2xl font-black mb-1">Suraj Satyarthi v. Apple India Pvt. Ltd.</h1>
-          <p className="text-blue-200 text-sm mb-4">Consumer Protection Act 2019 — Manufacturing Defect + Deficiency in Service</p>
+          <p className="text-blue-200 text-sm mb-4">Consumer Protection Act 2019 — Manufacturing Defect + Deficiency in Service + Wrongful Retention of Property</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { label: 'Documented Crashes', value: '5', sub: 'Feb 19–25, 2026' },
