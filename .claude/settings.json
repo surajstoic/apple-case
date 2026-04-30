@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/user/Desktop/Mac issue/apple-legal-dashboard/.claude/hooks/update-grok-brain.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
